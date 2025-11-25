@@ -1,13 +1,13 @@
-package Backpack.Item.accessorie;
+package model.items;
+
 import java.util.Objects;
 
 import Backpack.Item.Item;
 import Backpack.Item.Rarity;
 
-public record Accessorie(AccessoriesName name, AccessoriesType type, Rarity rarity, int size, int cost, String stats) implements Item {
-	public Accessorie{
+public record RangeWeapon(WeaponName name, int damage, Rarity rarity, int size, int cost, String stats) implements Item  {
+	public RangeWeapon{
 		Objects.requireNonNull(name,"name ne doit pas etre null");
-		Objects.requireNonNull(type,"le type ne doit pas etre pas null");
 		Objects.requireNonNull(rarity,"La rarity ne doit pas etre null");
 		Objects.requireNonNull(stats,"le stats ne doit pas etre null");
 		if(size <= 0 || size > 5) {

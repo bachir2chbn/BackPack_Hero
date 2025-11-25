@@ -1,0 +1,161 @@
+package model.hero;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+public class Backpack {
+	
+	
+	private static final int ROWS =3;
+	private static final int COLS = 5;
+	private final Object[][] grid;
+	private final List <Object> items;
+	
+	public Backpack() {
+		this.grid = new Object[ROWS][COLS];
+		this.items = new ArrayList<>();
+	}
+	
+	public static int getRows() {
+		return ROWS;
+	}
+	
+	public static int getCols() {
+		return COLS;
+	}
+	
+	public Object getItemAt(int row, int col) {
+		checkBounds(row, col);
+		return grid[row][col];
+	}
+	
+	public boolean canPlaceItem(Object item, int startRow, int startCol) {
+		Objects.requireNonNull(item);
+		boolean[][] shape = item.getShape();
+		int shapeRows = shape.length;
+		int shapeCols = shape[0].length;
+		if (startRow + shapeRows > ROWS || startCol + shapeCols > COLS)	return false;
+		if (startRow < 0 || startCol < 0)	return false;
+		for (int i = 0; i < shapeRows; i++) {
+			for (int j = 0; j < shapeCols; j++) {
+				if (shape[i][j]) {
+					int row = startRow + i;
+					int col = startCol + j;
+					if (grid[row][col] != null && grid[row][col] != item) return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	public boolean placeItem(Object item, int startRow, int startCol) {
+		Objects.requireNonNull(item);
+		if (! canPlaceItem(item, startRow, startCol)) {
+			return false;
+		}
+		boolean[][] shape = item.getShape();
+		for (int i = 0; i < shape.length; i++) {
+			for (int j = 0; j < shape[i].length; j++) {
+				if (shape[i][j]) {
+					grid[startRow + i][startCol + j] = item;
+				}
+			}
+		}
+		
+		if (!items.contains(item)) {
+			items.add(item);
+		}
+		return true;
+	}
+	
+	public boolean removeItem(Object item) {
+		Objects.requireNonNull(item);
+		if (!items.contains(item)) {
+			return false;
+		}
+		
+		for(int i = 0; i < ROWS; i++) {
+			for (int j = 0; j < COLS; j++) {
+				if(grid[i][j] == item) {
+					grid[i][j] = null;
+				}
+			}
+		}
+		items.remove(item);
+		return true;
+	}
+	
+	public int[] findItemPosition(Object item) {
+		Objects.requireNonNull(item);
+		
+		for(int i = 0; i < ROWS; i++) {
+			for (int j = 0; j < COLS; j++) {
+				if(grid[i][j] == item) {
+					return new int[] {i, j};
+			}
+		}
+	}
+		return null;
+	}
+
+	public boolean autoPlaceItem(Object item) {
+		Objects.requireNonNull(item);
+		
+		for (int rotation = 0; rotation < 4; rotation++) {
+			for (int row = 0; row < ROWS; row++) {
+				for (int col = 0; col < COLS; col++) {
+					if (placeItem(item, row, col)) {
+						return true;
+					}
+				}
+			}
+			item.rotate();
+		}
+		return false;
+	}
+	
+	public int getItemCount() {
+		return items.size();
+	}
+	
+	public boolean isEmpty() {
+		return items.isEmpty();
+	}
+	
+	public void clear() {
+		for(int i = 0; i < ROWS; i++) {
+			for (int j = 0; j < COLS; j++) {
+				grid[i][j] = null;
+			}
+		}
+		items.clear();
+	}
+	
+	private void checkBounds(int row, int col) {
+		if (row < 0 || row >= ROWS || col < 0 || col >= COLS) {
+			throw new IllegalArgumentException(String.format("Position (%d, %d) out of bounds", row, col));
+    	}
+	}
+
+	@Override
+	public String toString() {
+	    StringBuilder sb = new StringBuilder();
+	    sb.append("Backpack [").append(items.size()).append(" items]\n");
+	    
+	    for (int i = 0; i < ROWS; i++) {
+	        for (int j = 0; j < COLS; j++) {
+	            sb.append(grid[i][j] != null ? "X" : ".");
+	            sb.append(" ");
+	        }
+	        sb.append("\n");
+	    }
+	    
+	    return sb.toString();
+	}
+
+	
+	
+	
+	
+}

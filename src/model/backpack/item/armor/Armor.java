@@ -1,11 +1,11 @@
-package Backpack.Item.accessorie;
+package model.backpack.item.armor;
 import java.util.Objects;
 
 import Backpack.Item.Item;
 import Backpack.Item.Rarity;
 
-public record Accessorie(AccessoriesName name, AccessoriesType type, Rarity rarity, int size, int cost, String stats) implements Item {
-	public Accessorie{
+public record Armor(ArmorName name, ArmorType type, Rarity rarity, int size, int cost, String stats) implements Item {
+	public Armor{
 		Objects.requireNonNull(name,"name ne doit pas etre null");
 		Objects.requireNonNull(type,"le type ne doit pas etre pas null");
 		Objects.requireNonNull(rarity,"La rarity ne doit pas etre null");

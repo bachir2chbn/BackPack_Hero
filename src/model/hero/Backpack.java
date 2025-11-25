@@ -4,16 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import model.items.Item;
+
 public class Backpack {
 	
 	
 	private static final int ROWS =3;
 	private static final int COLS = 5;
-	private final Object[][] grid;
-	private final List <Object> items;
+	private final Item[][] grid;
+	private final List <Item> items;
+
 	
 	public Backpack() {
-		this.grid = new Object[ROWS][COLS];
+		this.grid = new Item[ROWS][COLS];
 		this.items = new ArrayList<>();
 	}
 	
@@ -25,12 +28,12 @@ public class Backpack {
 		return COLS;
 	}
 	
-	public Object getItemAt(int row, int col) {
+	public Item getItemAt(int row, int col) {
 		checkBounds(row, col);
 		return grid[row][col];
 	}
 	
-	public boolean canPlaceItem(Object item, int startRow, int startCol) {
+	public boolean canPlaceItem(Item item, int startRow, int startCol) {
 		Objects.requireNonNull(item);
 		boolean[][] shape = item.getShape();
 		int shapeRows = shape.length;
@@ -49,7 +52,7 @@ public class Backpack {
 		return true;
 	}
 	
-	public boolean placeItem(Object item, int startRow, int startCol) {
+	public boolean placeItem(Item item, int startRow, int startCol) {
 		Objects.requireNonNull(item);
 		if (! canPlaceItem(item, startRow, startCol)) {
 			return false;
@@ -69,7 +72,7 @@ public class Backpack {
 		return true;
 	}
 	
-	public boolean removeItem(Object item) {
+	public boolean removeItem(Item item) {
 		Objects.requireNonNull(item);
 		if (!items.contains(item)) {
 			return false;
@@ -99,7 +102,7 @@ public class Backpack {
 		return null;
 	}
 
-	public boolean autoPlaceItem(Object item) {
+	public boolean autoPlaceItem(Item item) {
 		Objects.requireNonNull(item);
 		
 		for (int rotation = 0; rotation < 4; rotation++) {

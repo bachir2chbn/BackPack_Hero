@@ -1,4 +1,4 @@
-package Backpack.Item;
+package model.items;
 
 public enum Rarity {
 	commun,

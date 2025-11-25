@@ -1,4 +1,4 @@
-package model.backpack.item.armor;
+package model.items;
 
 public enum ArmorName {
 	RoughBuckler,

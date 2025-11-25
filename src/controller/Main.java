@@ -1,8 +1,13 @@
 package controller;
+import java.awt.Color;
+
+import com.github.forax.zen.Application;
+
 import model.items.*;
 import model.items.MeleeWeapon;
 import model.items.Rarity;
 import model.items.WeaponName;
+import view.BackpackView;
 
 public class Main {
 
@@ -18,7 +23,10 @@ public class Main {
 		System.out.println( sword);
 		sword = sword.rotate();
 		System.out.println(sword);
+//	  Application.run(Color.WHITE, BackpackController:: backpack );
+
 	}
+
 
 }
 

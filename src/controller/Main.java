@@ -1,8 +1,9 @@
 package controller;
+
+
 import model.items.*;
-import model.items.MeleeWeapon;
-import model.items.Rarity;
-import model.items.WeaponName;
+
+
 
 public class Main {
 
@@ -15,7 +16,7 @@ public class Main {
 		    // ligne horizontale
 		};
 		Item sword = new MeleeWeapon(WeaponName.machete, 2, Rarity.commun, swordShape, 0, "azul");
-		System.out.println( sword);
+		System.out.println(sword);
 		sword = sword.rotate();
 		System.out.println(sword);
 	}

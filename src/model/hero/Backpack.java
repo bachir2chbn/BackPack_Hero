@@ -36,14 +36,16 @@ public class Backpack {
 		var shape = item.getShape();
 		int shapeRows = shape.length;
 		int shapeCols = shape[0].length;
-		if (startRow + shapeRows > rows || startCol + shapeCols > cols)	return false;
-		if (startRow < 0 || startCol < 0) return false;
+		if (startRow + shapeRows > rows || startCol + shapeCols > cols)
+			return false;
+		if (startRow < 0 || startCol < 0)
+			return false;
 		for (int i = 0; i < shapeRows; i++) {
 			for (int j = 0; j < shapeCols; j++) {
 				if (shape[i][j]) {
 					int row = startRow + i;
 					int col = startCol + j;
-					if (grid[row][col] != null && grid[row][col] != item)
+					if (grid[row][col] != null && !grid[row][col].equals(item))
 						return false;
 				}
 			}
@@ -79,7 +81,7 @@ public class Backpack {
 
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
-				if (grid[i][j] == item) {
+				if (grid[i][j] != null && grid[i][j].equals(item)) {
 					grid[i][j] = null;
 				}
 			}
@@ -89,16 +91,33 @@ public class Backpack {
 	}
 
 	public int[] findItemPosition(Item item) {
-		Objects.requireNonNull(item);
+		java.util.Objects.requireNonNull(item);
+		// On récupère le décalage
+		int[] offset = getFirstShapeBlock(item.getShape());
 
+		// On cherche le premier morceau de l'item dans la grille
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
-				if (grid[i][j] == item) {
-					return new int[] { i, j };
+				// On vérifie l'identité
+				if (grid[i][j] != null && grid[i][j].equals(item)) {
+					// On applique la correction
+					return new int[] { i - offset[0], j - offset[1] };
 				}
 			}
 		}
 		return null;
+	}
+
+	// Trouve les coordonnées du premier true dans la forme
+	private int[] getFirstShapeBlock(boolean[][] shape) {
+		for (int i = 0; i < shape.length; i++) {
+			for (int j = 0; j < shape[i].length; j++) {
+				if (shape[i][j]) {
+					return new int[] { i, j };
+				}
+			}
+		}
+		return new int[] { 0, 0 };
 	}
 
 	public boolean autoPlaceItem(Item item) {

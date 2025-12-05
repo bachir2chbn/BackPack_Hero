@@ -9,6 +9,8 @@ public class GameView {
 
 	private final GameData data;
 	private final BackpackView backpackView;
+	private final FloorView floorView;
+	
 	private Item draggedItem; 
 	private float dragX, dragY;
 
@@ -21,24 +23,43 @@ public class GameView {
 	public GameView(GameData data) {
 		this.data = data;
 
-		this.backpackView = new BackpackView(50, 100, 5, 3, 80);
+		this.backpackView = new BackpackView(50, 500, 5, 3, 80);
+		
+		this.floorView = new FloorView(50, 50, 80);
 	}
 
 	public void draw(Graphics2D graphics) {
-		// Fond d'écran
+		// Fond d'ecran
 		graphics.setColor(new Color(30, 30, 30));
 		graphics.fillRect(0, 0, 1920, 1080);
 
+		//Floor
+    if (data.getCurrentFloor() != null) {
+    	graphics.setColor(Color.WHITE);
+      graphics.drawString("Carte du Donjon", 50, 40);
+      if (data.getCurrentFloor() != null) {
+  			floorView.draw(graphics, data.getCurrentFloor(), data.getHeroX(), data.getHeroY());
+  		}
+    }
+    
+		//Backpack
 		if (data.getHero() != null) {
+			graphics.setColor(Color.WHITE);
+      graphics.drawString("Sac à dos", 50, 490);
 			backpackView.draw(graphics, data.getHero().getBackpack());
 		}
 		
-		 if (draggedItem != null) {
-       backpackView.drawFloatingItem(graphics, draggedItem, dragX, dragY);
+		//Item choisi pour deplacer
+		if (draggedItem != null) {
+			backpackView.drawFloatingItem(graphics, draggedItem, dragX, dragY);
    }
 	}
 
 	public BackpackView getBackpackView() {
     return backpackView;
+	}
+	
+	public FloorView getFloorView() {
+    return floorView;
 	}
 }

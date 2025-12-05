@@ -10,12 +10,14 @@ import com.github.forax.zen.PointerEvent;
 import com.github.forax.zen.KeyboardEvent;
 
 import model.dungeon.GameData;
+import model.hero.Backpack;
 import model.items.Item;
 import view.GameView;
 
 public class GameController {
 
 	private static Item draggedItem = null;
+	private static Item originalItem = null;
 	private static int originalRow = -1;
 	private static int originalCol = -1;
 	private static Point2D.Float mousePosition = new Point2D.Float(0, 0);
@@ -80,7 +82,7 @@ public class GameController {
 		}
 	}
 
-	//Choix de l'item à prendre
+	/*//Choix de l'item à prendre
 	private static void handlePointerDown(int x, int y, GameData data, GameView view) {
 		var backpackView = view.getBackpackView();
 		int[] gridPos = backpackView.getGridPosition(x, y);
@@ -94,11 +96,48 @@ public class GameController {
 		if (item != null) {
 			prepareDrag(item, backpack);
 		}
+	}*/
+	
+	private static void handlePointerDown(int x, int y, GameData data, GameView view) {
+		if (tryHandleBackpackClick(x, y, data, view)) {
+			return; // Si on a pris un item, on s'arrête là
+		}
+
+		handleMapClick(x, y, data, view);
+	}
+	
+	//Renvoie true si on a cliqué sur le sac
+	private static boolean tryHandleBackpackClick(int x, int y, GameData data, GameView view) {
+		var backpackView = view.getBackpackView();
+		int[] gridPos = backpackView.getGridPosition(x, y);
+
+		if (gridPos != null) {
+			Item item = data.getHero().getBackpack().getItemAt(gridPos[0], gridPos[1]);
+			if (item != null) {
+				prepareDrag(item, data.getHero().getBackpack());
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private static void handleMapClick(int x, int y, GameData data, GameView view) {
+		int[] mapPos = view.getFloorView().getGridPosition(x, y);
+
+		if (mapPos != null) {
+			int targetX = mapPos[0];
+			int targetY = mapPos[1];
+			
+			data.moveHeroTo(targetX, targetY);
+			
+			System.out.println("Déplacement vers : " + targetX + ", " + targetY);
+		}
 	}
 
 	//Initialisation de l'item choisi
-	private static void prepareDrag(Item item, model.hero.Backpack backpack) {
+	private static void prepareDrag(Item item, Backpack backpack) {
 		draggedItem = item;
+		originalItem = item;
 		int[] truePos = backpack.findItemPosition(item);
 		originalRow = truePos[0];
 		originalCol = truePos[1];
@@ -118,10 +157,11 @@ public class GameController {
 
 		if (!success) {
 			System.out.println("NOPE!!");// Pour le debug, à retirer apres!!!!!
-			backpack.placeItem(draggedItem, originalRow, originalCol);
+			backpack.placeItem(originalItem, originalRow, originalCol);
 		} else {
 			System.out.println("Placé en " + gridPos[0] + "," + gridPos[1]);// Pour le debug, à retirer apres!!!!!
 		}
 		draggedItem = null;
+		originalItem = null;
 	}
 }

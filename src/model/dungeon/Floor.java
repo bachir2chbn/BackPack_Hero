@@ -7,11 +7,6 @@ public class Floor {
 
 	public Floor() {
 		this.rooms = new Room[WIDTH][HEIGHT];
-		for (int x = 0; x < WIDTH; x++) {
-			for (int y = 0; y < HEIGHT; y++) {
-				rooms[x][y] = new Room(RoomType.EMPTY);
-			}
-		}
 	}
 
 	public void setRoom(int x, int y, Room room) {

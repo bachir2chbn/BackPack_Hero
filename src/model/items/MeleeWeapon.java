@@ -3,21 +3,6 @@ package model.items;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
-/**
- * Arme de corps à corps avec dégâts et forme pour l'inventaire.
- *
- * @param id identifiant
- * @param name nom de l'arme
- * @param damage dégâts infligés
- * @param rarity rareté
- * @param shape forme dans le sac
- * @param cost coût d'utilisation
- * @param stats description additionnelle
- *
- * @author bachir2chbn
- * @author Mohammed442a
- * @version 1.0
- */
 public record MeleeWeapon(long id, WeaponName name, int damage, Rarity rarity, boolean[][] shape, int cost,
     String stats) implements Item {
 	public MeleeWeapon {
@@ -30,16 +15,6 @@ public record MeleeWeapon(long id, WeaponName name, int damage, Rarity rarity, b
 		}
 	}
 
-	/**
-	 * Constructeur de commodité générant un id aléatoire.
-	 *
-	 * @param name nom de l'arme
-	 * @param damage dégâts
-	 * @param rarity rareté
-	 * @param shape forme
-	 * @param cost coût
-	 * @param stats description
-	 */
 	public MeleeWeapon(WeaponName name, int damage, Rarity rarity, boolean[][] shape, int cost, String stats) {
 		this(ThreadLocalRandom.current().nextLong(), name, damage, rarity, shape, cost, stats);
 	}

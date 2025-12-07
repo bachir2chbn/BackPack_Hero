@@ -14,14 +14,6 @@ import model.items.MeleeWeapon;
 import model.items.RangeWeapon;
 import model.items.Shield;
 
-/**
- * Gère la logique d'un combat entre le héros et une liste d'ennemis :
- * phases, tours, utilisation d'objets, application des dégâts et fin de combat.
- *
- * @author bachir2chbn
- * @author Mohammed442a
- * @version 1.0
- */
 public class Combat {
 	
 	public enum Phase {
@@ -38,9 +30,7 @@ public class Combat {
 		this.hero = Objects.requireNonNull(hero, "hero ne doit pas etre null");
 		this.enemies = new ArrayList<>(Objects.requireNonNull(enemies));
 		
-		if (enemies.isEmpty()) {
-			throw new IllegalArgumentException("la liste d'enemies ne doit pas etre vide");
-		}
+		if (enemies.isEmpty()) throw new IllegalArgumentException("la liste d'enemies ne doit pas etre vide");
 		
 		this.currentPhase = Phase.HERO_TURN;
 		this.turnNumber = 1;
@@ -49,17 +39,12 @@ public class Combat {
 		hero.rechargeMana();
 		hero.startNewTurn();
 		
-		//les ennemis choisissent leur premiere action
 		enemies.forEach(Enemy::chooseNextActions);
 		
 	}
 	
-	/**
-	 * Utilise un objet pendant le tour du héros.
-	 *
-	 * @param item l'objet utilisé
-	 */
 	public void useItem(Item item) {
+		Objects.requireNonNull(item);
 		if (currentPhase != Phase.HERO_TURN || enemies.isEmpty()) return;
 		
 		if (!hero.consumeEnergy(item.cost())) {
@@ -70,6 +55,7 @@ public class Combat {
 		applyItemEffect(item, enemies.get(0));
 		checkDeaths();
 	}
+	
 	private void applyItemEffect(Item item, Enemy target) {
 		switch (item) {
 			case Magic m -> {
@@ -116,9 +102,6 @@ public class Combat {
 		}
 	}
 	
-	/**
-	 * Termine le tour du héros et déclenche l'exécution des actions ennemies.
-	 */
 	public void endHeroTurn() {
 		if (currentPhase != Phase.HERO_TURN) {
 			throw new IllegalStateException("ce n'est pas le tour de hero");
@@ -152,56 +135,26 @@ public class Combat {
 	
 	//GETTERS
 	
-	/**
-	 * Retourne le héros impliqué dans ce combat.
-	 *
-	 * @return l'objet Hero
-	 */
 	public Hero getHero() {
 		return hero;
 	}
 	
-	/**
-	 * Retourne une copie de la liste d'ennemis.
-	 *
-	 * @return liste d'ennemis
-	 */
 	public List<Enemy> getEnemies(){
 		return new ArrayList<>(enemies);
 	}
 	
-	/**
-	 * Retourne la phase actuelle du combat.
-	 *
-	 * @return la phase courante
-	 */
 	public Phase getCurrentPhase() {
 		return currentPhase;
 	}
 	
-	/**
-	 * Retourne le numéro de tour courant.
-	 *
-	 * @return numéro du tour
-	 */
 	public int getTurnNumber() {
 		return turnNumber;
 	}
 	
-	/**
-	 * Indique si le combat est terminé (victoire ou défaite).
-	 *
-	 * @return true si le combat est terminé
-	 */
 	public boolean isOver() {
 		return currentPhase.equals(Phase.VICTORY) || currentPhase.equals(Phase.DEFEAT);
 	}
 	
-	/**
-	 * Retourne les logs texte du combat.
-	 *
-	 * @return chaîne des logs
-	 */
 	public String getLogs() {
 		return logs;
 	}

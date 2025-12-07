@@ -1,12 +1,7 @@
 package model.dungeon;
 
-/**
- * Représente un étage du donjon : grille de Room avec dimensions fixes.
- *
- * @author bachir2chbn
- * @author Mohammed442a
- * @version 1.0
- */
+import java.util.Objects;
+
 public class Floor {
 	private static final int HEIGHT = 5;
 	private static final int WIDTH = 11;
@@ -17,6 +12,7 @@ public class Floor {
 	}
 
 	public void setRoom(int x, int y, Room room) {
+		Objects.requireNonNull(room);
 		if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
 			rooms[x][y] = room;
 		}

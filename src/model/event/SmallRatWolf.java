@@ -5,14 +5,6 @@ import java.util.Objects;
 
 import model.hero.Hero;
 
-/**
- * Ennemi concret : Small Rat-Wolf. Délègue la majeure partie du stockage à
- * EnemyData et implémente l'interface Enemy.
- *
- * @author bachir2chbn
- * @author Mohammed442a
- * @version 1.0
- */
 public class SmallRatWolf implements Enemy {
 	private final EnemyData enemyData;
 	

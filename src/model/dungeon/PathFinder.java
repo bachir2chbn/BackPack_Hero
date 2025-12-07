@@ -3,23 +3,17 @@ package model.dungeon;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
-/**
- * Utilitaire pour trouver le plus court chemin sur une grille Floor
- * entre deux coordonnées en utilisant BFS.
- *
- * @author bachir2chbn
- * @author Mohammed442a
- * @version 1.0
- */
 public class PathFinder {
 	
 	public static List<Point> findShortestPath(Floor floor, int startX, int startY, int endX, int endY) {
+		Objects.requireNonNull(floor);
 		boolean[][] visited = new boolean[floor.getWidth()][floor.getHeight()];
 		Point[][] predecessors = new Point[floor.getWidth()][floor.getHeight()];
 		LinkedList<Point> queue = new LinkedList<>();
 
-		Point start = new Point(startX, startY);
+		var start = new Point(startX, startY);
 		queue.add(start);
 		visited[startX][startY] = true;
 

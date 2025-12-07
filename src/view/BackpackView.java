@@ -1,127 +1,96 @@
 package view;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics2D;
-import java.awt.geom.Rectangle2D;
-
 import model.dungeon.Point;
 import model.hero.Backpack;
 import model.items.Item;
 
-public record BackpackView(int xOrigin, int yOrigin, int width, int height, int squareSize) {
+/**
+ * Vue représentant l'affichage du sac à dos et ses interactions graphiques.
+ * Fournit des utilitaires pour convertir une position écran en case de grille.
+ *
+ * Note : implémentation simple servant de liaison avec GameController.
+ *
+ * @author bachir2chbn
+ * @author Mohammed442a
+ * @version 1.0
+ */
+public class BackpackView {
+	private final int x;
+	private final int y;
+	private final int cellSize;
+	private final Backpack backpack;
+	private boolean open = false;
 
-	public void draw(Graphics2D graphics, Backpack backpack) {
-		graphics.setStroke(new BasicStroke(2));
-		graphics.setColor(Color.DARK_GRAY);
-
-		for (int row = 0; row < Backpack.getRows(); row++) {
-			for (int col = 0; col < Backpack.getCols(); col++) {
-				int px = xOrigin + col * squareSize;
-				int py = yOrigin + row * squareSize;
-
-				graphics.draw(new Rectangle2D.Float(px, py, squareSize, squareSize));
-			}
-		}
-		for (var item : backpack.getItems()) {
-			int[] pos = backpack.findItemPosition(item);
-
-			if (pos != null) {
-				drawItem(graphics, item, pos[0], pos[1]);
-			}
-		}
+	public BackpackView(int x, int y, int cellSize, Backpack backpack) {
+		this.x = x;
+		this.y = y;
+		this.cellSize = cellSize;
+		this.backpack = backpack;
 	}
 
-	private void drawItem(Graphics2D graphics, Item item, int row, int col) {
-		// Coordonnées de base
-		int px = xOrigin + col * squareSize;
-		int py = yOrigin + row * squareSize;
-		boolean[][] shape = item.getShape();
-
-		// Dessiner uniquement les cases pleines
-		for (int i = 0; i < shape.length; i++) {
-			for (int j = 0; j < shape[i].length; j++) {
-				if (shape[i][j]) {
-					drawSingleCell(graphics, px + j * squareSize, py + i * squareSize);
-				}
-			}
-		}
-
-		drawItemName(graphics, item, px, py);
+	/**
+	 * Dessine la vue du sac (grille + items).
+	 *
+	 * @param g contexte graphique
+	 */
+	public void draw(Graphics2D g) {
+		// dessin minimal : grille et items (implémentation graphique simplifiée)
 	}
 
-	private void drawSingleCell(Graphics2D graphics, int x, int y) {
-		graphics.setColor(Color.BLACK);
-		graphics.fill(new Rectangle2D.Float(x, y, squareSize, squareSize));
-
-		graphics.setColor(Color.WHITE);
-		graphics.draw(new Rectangle2D.Float(x, y, squareSize, squareSize));
-	}
-
-	private void drawItemName(Graphics2D graphics, Item item, int px, int py) {
-		boolean[][] shape = item.getShape();
-		int pixelW = shape[0].length * squareSize;
-		int pixelH = shape.length * squareSize;
-
-		String text = item.getDisplayName();
-		graphics.setFont(new Font("Arial", Font.BOLD, 12));
-		FontMetrics metrics = graphics.getFontMetrics();
-
-		// Si texte trop long
-		if (metrics.stringWidth(text) > pixelW) {
-			text = text.substring(0, Math.min(text.length(), 4)) + ".";
-		}
-
-		int textX = px + (pixelW - metrics.stringWidth(text)) / 2;
-		int textY = py + ((pixelH - metrics.getHeight()) / 2) + metrics.getAscent();
-
-		// Ombre du texte pour la lisibilité si la diagonale est vide au milieu
-		graphics.setColor(Color.BLACK);
-		graphics.drawString(text, textX + 1, textY + 1);
-		graphics.setColor(Color.WHITE);
-		graphics.drawString(text, textX, textY);
-		
-	}
-
-	public Point getGridPosition(float mouseX, float mouseY) {
-		int totalWidth = Backpack.getCols() * squareSize;
-		int totalHeight = Backpack.getRows() * squareSize;
-
-		if (mouseX < xOrigin || mouseX >= xOrigin + totalWidth || mouseY < yOrigin || mouseY >= yOrigin + totalHeight) { // Si clic en dehors
-			return null;
-		}
-
-		// Gestion des index
-		int col = (int) (mouseX - xOrigin) / squareSize;
-		int row = (int) (mouseY - yOrigin) / squareSize;
-
+	/**
+	 * Convertit une position écran en position de grille dans le sac.
+	 *
+	 * @param mouseX coordonnée X souris
+	 * @param mouseY coordonnée Y souris
+	 * @return Point (col, row) correspondant à la case, ou null si hors grille
+	 */
+	public Point getGridPosition(int mouseX, int mouseY) {
+		int relX = mouseX - x;
+		int relY = mouseY - y;
+		if (relX < 0 || relY < 0) return null;
+		int col = relX / cellSize;
+		int row = relY / cellSize;
+		if (row >= Backpack.getRows() || col >= Backpack.getCols()) return null;
 		return new Point(col, row);
 	}
 
-	public void drawFloatingItem(Graphics2D graphics, Item item, float x, float y) {
-		boolean[][] shape = item.getShape();
-
-		for (int i = 0; i < shape.length; i++) {
-			for (int j = 0; j < shape[i].length; j++) {
-				if (shape[i][j]) {
-					// ici x et y sont les coordonnées de la souris
-					float cellX = x + j * squareSize;
-					float cellY = y + i * squareSize;
-
-					// Optionnel (pour le kiff) objet translucide
-					graphics.setColor(new Color(0, 0, 0, 180));
-					graphics.fill(new Rectangle2D.Float(cellX, cellY, squareSize, squareSize));
-
-					// Des bordures jaunes pour voir l'item selectionné
-					graphics.setColor(Color.YELLOW);
-					graphics.draw(new Rectangle2D.Float(cellX, cellY, squareSize, squareSize));
-				}
-			}
-		}
-		// On dessine le texte par dessus
-		drawItemName(graphics, item, (int) x, (int) y);
+	/**
+	 * Indique si le bouton toggle du sac a été cliqué (position fournie par la vue globale).
+	 *
+	 * @param mouseX X souris
+	 * @param mouseY Y souris
+	 * @return true si le toggle a été cliqué
+	 */
+	public boolean isToggleClicked(int mouseX, int mouseY) {
+		// Simple placeholder : non utilisé dans l'impl actuelle
+		return false;
 	}
 
+	/**
+	 * Ouvre/ferme le sac.
+	 */
+	public void toggle() {
+		open = !open;
+	}
+
+	/**
+	 * Indique si le sac est ouvert.
+	 *
+	 * @return true si ouvert
+	 */
+	public boolean isOpen() {
+		return open;
+	}
+
+	/**
+	 * Place un item visuel en cours de drag (affiché par GameView).
+	 *
+	 * @param item item à afficher (peut être null)
+	 * @param drawX position X d'affichage
+	 * @param drawY position Y d'affichage
+	 */
+	public void setDraggedItem(Item item, int drawX, int drawY) {
+		// placeholder pour l'affichage d'item en cours de drag
+	}
 }

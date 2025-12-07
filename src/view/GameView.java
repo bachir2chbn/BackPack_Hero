@@ -9,6 +9,14 @@ import model.dungeon.GameData;
 import model.hero.Hero;
 import model.items.Item;
 
+/**
+ * Vue principale combinant FloorView, BackpackView et CombatView.
+ * Fournit des méthodes utilitaires utilisées par le contrôleur.
+ *
+ * @author bachir2chbn
+ * @author Mohammed442a
+ * @version 1.0
+ */
 public class GameView {
 
 	private final GameData data;
@@ -35,7 +43,14 @@ public class GameView {
 		this.data = data;
 		this.floorView = new FloorView(50, 50, 80);
 	}
-	
+
+	/**
+	 * Positionne l'item actuellement déplacé pour l'affichage.
+	 *
+	 * @param item item à afficher (peut être null)
+	 * @param x position X d'affichage
+	 * @param y position Y d'affichage
+	 */
 	public void setDraggedItem(Item item, float x, float y) {
     this.draggedItem = item;
     this.dragX = x;
@@ -161,7 +176,14 @@ public class GameView {
     String text = showBackpack ? "FERMER" : "INVENTAIRE";
     g.drawString(text, uiX + 25, buttonY + 30);
 	}
-	
+
+	/**
+	 * Indique si le bouton de toggle du sac a été cliqué.
+	 *
+	 * @param mouseX coordonnée X souris
+	 * @param mouseY coordonnée Y souris
+	 * @return true si toggle cliqué
+	 */
 	public boolean isBackpackToggleButtonClicked(int x, int y) {
     return x >= uiX && x <= uiX + buttonW && y >= buttonY && y <= buttonY + buttonH;
 	}
@@ -169,7 +191,12 @@ public class GameView {
 	public void toggleBackpack() {
     this.showBackpack = !this.showBackpack;
 	}
-	
+
+	/**
+	 * Indique si le sac est ouvert.
+	 *
+	 * @return true si ouvert
+	 */
 	public boolean isBackpackOpen() {
     return showBackpack;
 	}
@@ -185,4 +212,5 @@ public class GameView {
 	public CombatView getCombatView() {
 		return combatView;
 	}
+
 }

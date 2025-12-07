@@ -13,6 +13,9 @@ import model.dungeon.RoomType;
 public record FloorView(int xOrigin, int yOrigin, int roomSize) {
 
 	public void draw(Graphics2D graphics, Floor floor, Point heroPos) {
+		Objects.requireNonNull(graphics);
+		Objects.requireNonNull(floor);
+		Objects.requireNonNull(heroPos);
 		for (int x = 0; x < floor.getWidth(); x++) {
 			for (int y = 0; y < floor.getHeight(); y++) {
 				drawRoom(graphics, floor, x, y);
@@ -27,7 +30,6 @@ public record FloorView(int xOrigin, int yOrigin, int roomSize) {
 		int px = xOrigin + x * roomSize;
 		int py = yOrigin + y * roomSize;
 		
-		//Un pion au centre de la case
 		int padding = 10;
 		graphics.setColor(Color.BLACK);
 		graphics.fillOval(px + padding, py + padding, roomSize - 2*padding, roomSize - 2*padding);
@@ -37,14 +39,12 @@ public record FloorView(int xOrigin, int yOrigin, int roomSize) {
 	}
 
 	private void drawRoom(Graphics2D graphics, Floor floor, int x, int y) {
-		Room room = floor.getRoom(x, y);
-		if (room == null)
-			return;
+		var room = floor.getRoom(x, y);
+		if (room == null) return;
 
 		int px = xOrigin + x * roomSize;
 		int py = yOrigin + y * roomSize;
-
-		Color color = getRoomColor(room.getType());
+		var color = getRoomColor(room.getType());
 
 		// Carré qui représente la salle
 		graphics.setColor(color);
@@ -53,7 +53,6 @@ public record FloorView(int xOrigin, int yOrigin, int roomSize) {
 		// Des bordures pour que ça soit clean
 		graphics.setColor(Color.BLACK);
 		graphics.draw(new Rectangle2D.Float(px, py, roomSize - 2, roomSize - 2));
-
 	}
 
 	private Color getRoomColor(RoomType type) {

@@ -5,7 +5,14 @@ import java.util.List;
 import java.util.Objects;
 import model.event.Enemy;
 
-
+/**
+ * Représente une salle du donjon. Gère le type de salle, les ennemis et l'état
+ * visité / nettoyé.
+ *
+ * @author bachir2chbn
+ * @author Mohammed442a
+ * @version 1.0
+ */
 public class Room {
 
 	

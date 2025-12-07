@@ -38,8 +38,11 @@ public class GameController {
 			if (event != null) {
 				eventsHandler(event, data, view);
 			}
+			
+			var screenInfo = context.getScreenInfo();
+			
 			updateViewDragPosition(view);
-			context.renderFrame(graphics -> view.draw(graphics));
+			context.renderFrame(graphics -> view.draw(graphics, (int) screenInfo.width(), (int) screenInfo.height()));
 		}
 	}
 

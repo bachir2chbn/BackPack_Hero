@@ -42,25 +42,24 @@ public class GameView {
     this.dragY = y;
 	}
 
-	public void draw(Graphics2D g) {
-    updateLayoutIfResized(g);
+	public void draw(Graphics2D g, int width, int height) {
+    if (width != currentWidth || height != currentHeight) {
+        updateLayout(width, height);
+    }
+
     drawBackground(g);
     drawMap(g);
+
     drawCombat(g);
-    drawInterface(g); // Regroupe Stats, Bouton, Sac
+
+    drawInterface(g);
     drawDraggedItem(g);
 	}
 	
-	private void updateLayoutIfResized(Graphics2D g) {
-    Rectangle bounds = g.getClipBounds();
-    int w = (bounds != null) ? bounds.width : 1920;
-    int h = (bounds != null) ? bounds.height : 1080;
-
-    if (w != currentWidth || h != currentHeight) {
-        this.currentWidth = w;
-        this.currentHeight = h;
-        recalculatePositions(w, h);
-    }
+	private void updateLayout(int w, int h) {
+    this.currentWidth = w;
+    this.currentHeight = h;
+    recalculatePositions(w, h);
 	}
 	
 	private void recalculatePositions(int w, int h) {

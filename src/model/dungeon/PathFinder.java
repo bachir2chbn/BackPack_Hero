@@ -4,6 +4,14 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Utilitaire pour trouver le plus court chemin sur une grille Floor
+ * entre deux coordonnées en utilisant BFS.
+ *
+ * @author bachir2chbn
+ * @author Mohammed442a
+ * @version 1.0
+ */
 public class PathFinder {
 	
 	public static List<Point> findShortestPath(Floor floor, int startX, int startY, int endX, int endY) {

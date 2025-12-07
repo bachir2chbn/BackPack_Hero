@@ -6,6 +6,14 @@ import java.awt.Graphics2D;
 import model.event.Combat;
 import model.event.Enemy;
 
+/**
+ * Vue affichant l'interface de combat : ennemi, logs et bouton de fin de tour.
+ * Ce record encapsule la position et la taille de la zone de combat.
+ *
+ * @author bachir2chbn
+ * @author Mohammed442a
+ * @version 1.0
+ */
 public record CombatView(int x, int y, int width, int height) {
 
 	public void draw(Graphics2D graphics, Combat combat) {
@@ -62,6 +70,13 @@ public record CombatView(int x, int y, int width, int height) {
 		g.drawString("FIN TOUR", btnX + 25, btnY + 25);
 	}
 
+	/**
+	 * Indique si la position de la souris correspond au bouton Fin Tour.
+	 *
+	 * @param mouseX coordonnée X de la souris
+	 * @param mouseY coordonnée Y de la souris
+	 * @return true si le bouton est cliqué
+	 */
 	public boolean isEndTurnClicked(int mouseX, int mouseY) {
 		int btnX = x + width - 140;
 		int btnY = y + height - 50;

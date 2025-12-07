@@ -16,6 +16,14 @@ import model.hero.Backpack;
 import model.items.Item;
 import view.GameView;
 
+/**
+ * Contrôleur principal du jeu : gère la boucle principale, les évènements
+ * (souris/clavier) et les interactions entre la vue et le modèle.
+ *
+ * @author bachir2chbn
+ * @author Mohammed442a
+ * @version 1.0
+ */
 public class GameController {
 
 	private static Item draggedItem = null;
@@ -24,6 +32,12 @@ public class GameController {
 	private static int originalCol = -1;
 	private static Point2D.Float mousePosition = new Point2D.Float(0, 0);
 
+	/**
+	 * Point d'entrée de l'application. Initialise les données et la vue,
+	 * puis démarre la boucle d'application.
+	 *
+	 * @param args arguments de la ligne de commande (non utilisés)
+	 */
 	public static void main(String[] args) {
 		GameData data = new GameData();
 		GameView view = new GameView(data);

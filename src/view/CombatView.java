@@ -3,25 +3,20 @@ package view;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.util.Objects;
+
 import model.event.Combat;
 import model.event.Enemy;
 
-/**
- * Vue affichant l'interface de combat : ennemi, logs et bouton de fin de tour.
- * Ce record encapsule la position et la taille de la zone de combat.
- *
- * @author bachir2chbn
- * @author Mohammed442a
- * @version 1.0
- */
 public record CombatView(int x, int y, int width, int height) {
 
 	public void draw(Graphics2D graphics, Combat combat) {
+		Objects.requireNonNull(graphics);
+		Objects.requireNonNull(combat);
 		drawBackground(graphics);
 		
-		if (!combat.getEnemies().isEmpty()) {
+		if (!combat.getEnemies().isEmpty())
 			drawEnemy(graphics, combat.getEnemies().get(0));
-		}
 
 		drawLogs(graphics, combat.getLogs());
 		drawEndTurnButton(graphics);
@@ -37,12 +32,10 @@ public record CombatView(int x, int y, int width, int height) {
 	private void drawEnemy(Graphics2D g, Enemy enemy) {
 		int centerX = x + width / 2;
 		int centerY = y + 80;
-
-		// Carré Rouge pour un ennemi
-		g.setColor(Color.RED);
+		
+		g.setColor(Color.RED); // Carré Rouge pour un ennemi
 		g.fillRect(centerX - 50, centerY, 100, 100);
 
-		//Infos Texte
 		g.setColor(Color.WHITE);
 		g.setFont(new Font("Arial", Font.BOLD, 20));
 		g.drawString(enemy.getName(), centerX - 40, centerY - 10);
@@ -70,17 +63,9 @@ public record CombatView(int x, int y, int width, int height) {
 		g.drawString("FIN TOUR", btnX + 25, btnY + 25);
 	}
 
-	/**
-	 * Indique si la position de la souris correspond au bouton Fin Tour.
-	 *
-	 * @param mouseX coordonnée X de la souris
-	 * @param mouseY coordonnée Y de la souris
-	 * @return true si le bouton est cliqué
-	 */
 	public boolean isEndTurnClicked(int mouseX, int mouseY) {
 		int btnX = x + width - 140;
 		int btnY = y + height - 50;
-		return mouseX >= btnX && mouseX <= btnX + 120 &&
-			   mouseY >= btnY && mouseY <= btnY + 40;
+		return mouseX >= btnX && mouseX <= btnX + 120 && mouseY >= btnY && mouseY <= btnY + 40;
 	}
 }

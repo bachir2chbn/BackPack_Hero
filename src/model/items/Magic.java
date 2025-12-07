@@ -3,6 +3,22 @@ package model.items;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Objet magique provoquant des dégâts (ou effets) et pouvant être utilisé
+ * en combat.
+ *
+ * @param id identifiant
+ * @param name nom magique
+ * @param damage dégâts infligés
+ * @param rarity rareté
+ * @param shape forme dans le sac
+ * @param cost coût en énergie
+ * @param stats description texte
+ *
+ * @author bachir2chbn
+ * @author Mohammed442a
+ * @version 1.0
+ */
 public record Magic(long id, MagicName name, int damage, Rarity rarity, boolean[][] shape, int cost, String stats)
     implements Item {
 	public Magic {
@@ -15,6 +31,16 @@ public record Magic(long id, MagicName name, int damage, Rarity rarity, boolean[
 		}
 	}
 
+	/**
+	 * Constructeur de commodité générant un id aléatoire.
+	 *
+	 * @param name nom
+	 * @param damage dégâts
+	 * @param rarity rareté
+	 * @param shape forme
+	 * @param cost coût
+	 * @param stats description
+	 */
 	public Magic(MagicName name, int damage, Rarity rarity, boolean[][] shape, int cost, String stats) {
 		this(ThreadLocalRandom.current().nextLong(), name, damage, rarity, shape, cost, stats);
 	}

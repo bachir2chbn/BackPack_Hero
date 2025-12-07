@@ -3,6 +3,21 @@ package model.items;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Représente un objet d'or stockable dans l'inventaire.
+ *
+ * @param id identifiant unique
+ * @param name nom affichable
+ * @param rarity rareté (généralement commun)
+ * @param amount quantité d'or
+ * @param shape forme dans l'inventaire
+ * @param cost coût (usage)
+ * @param stats description texte
+ *
+ * @author bachir2chbn
+ * @author Mohammed442a
+ * @version 1.0
+ */
 public record Gold(long id, String name, Rarity rarity, int amount, boolean[][] shape, int cost, String stats)
     implements Item {
 	public Gold {
@@ -15,6 +30,16 @@ public record Gold(long id, String name, Rarity rarity, int amount, boolean[][] 
 		}
 	}
 
+	/**
+	 * Constructeur de commodité générant un id aléatoire.
+	 *
+	 * @param name nom affichable
+	 * @param rarity rareté
+	 * @param amount quantité
+	 * @param shape forme
+	 * @param cost coût
+	 * @param stats description
+	 */
 	public Gold(String name, Rarity rarity, int amount, boolean[][] shape, int cost, String stats) {
 		this(ThreadLocalRandom.current().nextLong(), name, rarity, amount, shape, cost, stats);
 	}

@@ -36,4 +36,5 @@ public record Armor(long id, ArmorName name, int protectionBonus, Rarity rarity,
 	public Item setShape(boolean[][] rotated) {
 		return new Armor(id, name, protectionBonus, rarity, rotated, cost, stats);
 	}
+
 }

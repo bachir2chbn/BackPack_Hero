@@ -6,6 +6,8 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
+
+import model.dungeon.Point;
 import model.hero.Backpack;
 import model.items.Item;
 
@@ -83,7 +85,7 @@ public record BackpackView(int xOrigin, int yOrigin, int width, int height, int 
 		
 	}
 
-	public int[] getGridPosition(float mouseX, float mouseY) {
+	public Point getGridPosition(float mouseX, float mouseY) {
 		int totalWidth = Backpack.getCols() * squareSize;
 		int totalHeight = Backpack.getRows() * squareSize;
 
@@ -95,7 +97,7 @@ public record BackpackView(int xOrigin, int yOrigin, int width, int height, int 
 		int col = (int) (mouseX - xOrigin) / squareSize;
 		int row = (int) (mouseY - yOrigin) / squareSize;
 
-		return new int[] { row, col };
+		return new Point(col, row);
 	}
 
 	public void drawFloatingItem(Graphics2D graphics, Item item, float x, float y) {

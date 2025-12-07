@@ -33,4 +33,5 @@ public record Magic(long id, MagicName name, int damage, Rarity rarity, boolean[
 	public Item setShape(boolean[][] rotated) {
 		return new Magic(id, name, damage, rarity, rotated, cost, stats);
 	}
+
 }

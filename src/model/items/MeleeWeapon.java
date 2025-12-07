@@ -46,4 +46,5 @@ public record MeleeWeapon(long id, WeaponName name, int damage, Rarity rarity, b
 		}
 		return sb.toString();
 	}
+
 }

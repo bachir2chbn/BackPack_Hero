@@ -3,6 +3,8 @@ package model.dungeon;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.event.SmallRatWolf;
+
 public class Dungeon {
 	private final List<Floor> floors;
 	private int currentFloorIndex = 0;
@@ -16,21 +18,19 @@ public class Dungeon {
 		Floor f1 = new Floor();
 
 		//Salles spéciales
-		f1.setRoom(0, 2, new Room(RoomType.ENTRANCE));
-		f1.setRoom(4, 0, new Room(RoomType.ENEMY));
-		f1.setRoom(4, 4, new Room(RoomType.TREASURE));
-		f1.setRoom(8, 2, new Room(RoomType.HEALER));
-		f1.setRoom(10, 2, new Room(RoomType.EXIT));
+		f1.setRoom(0, 2, Room.create(RoomType.ENTRANCE));
+		f1.setRoom(4, 0, Room.createEnemyRoom(new SmallRatWolf()));
+		f1.setRoom(4, 4, Room.create(RoomType.TREASURE));
+		f1.setRoom(8, 2, Room.create(RoomType.HEALER));
+		f1.setRoom(10, 2, Room.create(RoomType.EXIT));
 
 		//Chemins (couloirs)
-		createCorridor(f1, 0, 2, 2, 2); // Départ -> Intersection
-		createCorridor(f1, 2, 0, 2, 4); // Colonne vertébrale
-		createCorridor(f1, 2, 0, 4, 0); // Vers Ennemi (Haut)
-		createCorridor(f1, 2, 4, 4, 4); // Vers Trésor (Bas)
-
+		createCorridor(f1, 0, 2, 2, 2); // Départ vers intersection
+		createCorridor(f1, 2, 0, 2, 4); // Ligne au millieu
+		createCorridor(f1, 2, 0, 4, 0); // Vers ennemi (haut)
+		createCorridor(f1, 2, 4, 4, 4); // Vers tresor (bas)
 		// De l'ennemi vers le couloir principal
 		createCorridor(f1, 4, 0, 4, 2);
-
 		// Jusqu'à la fin
 		createCorridor(f1, 4, 2, 10, 2);
 
@@ -48,7 +48,7 @@ public class Dungeon {
 		for (int x = minX; x <= maxX; x++) {
 			for (int y = minY; y <= maxY; y++) {
 				if (f.getRoom(x, y) == null) {
-					f.setRoom(x, y, new Room(RoomType.EMPTY));
+					f.setRoom(x, y, Room.create(RoomType.EMPTY));
 				}
 			}
 		}

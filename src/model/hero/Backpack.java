@@ -92,7 +92,7 @@ public class Backpack {
 
 	public int[] findItemPosition(Item item) {
 		java.util.Objects.requireNonNull(item);
-		// On récupère le décalage
+		// On récupère le decalage
 		int[] offset = getFirstShapeBlock(item.getShape());
 
 		// On cherche le premier morceau de l'item dans la grille

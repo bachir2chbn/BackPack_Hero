@@ -10,6 +10,8 @@ import com.github.forax.zen.PointerEvent;
 import com.github.forax.zen.KeyboardEvent;
 
 import model.dungeon.GameData;
+import model.dungeon.Point;
+import model.event.Combat;
 import model.hero.Backpack;
 import model.items.Item;
 import view.GameView;
@@ -61,7 +63,7 @@ public class GameController {
 		}
 	}
 
-	//Mise à jour de la vue (item qui suit la souris)
+	//Item qui suit la souris
 	private static void updateViewDragPosition(GameView view) {
 		if (draggedItem != null) {
 			view.setDraggedItem(draggedItem, mousePosition.x - 20, mousePosition.y - 20);
@@ -81,38 +83,73 @@ public class GameController {
 			case POINTER_UP -> handlePointerUp(x, y, data, view);
 		}
 	}
-
-	/*//Choix de l'item à prendre
-	private static void handlePointerDown(int x, int y, GameData data, GameView view) {
-		var backpackView = view.getBackpackView();
-		int[] gridPos = backpackView.getGridPosition(x, y);
-
-		if (gridPos == null)
-			return; // Clic hors grille
-
-		var backpack = data.getHero().getBackpack();
-		Item item = backpack.getItemAt(gridPos[0], gridPos[1]);
-
-		if (item != null) {
-			prepareDrag(item, backpack);
-		}
-	}*/
 	
 	private static void handlePointerDown(int x, int y, GameData data, GameView view) {
-		if (tryHandleBackpackClick(x, y, data, view)) {
-			return; // Si on a pris un item, on s'arrête là
+		if (view.isBackpackToggleButtonClicked(x, y)) {
+      view.toggleBackpack();
+      return;
+		}
+		if (data.isFighting()) {
+			handleCombatClick(x, y, data, view);
+			return;
+		}
+		
+		if (view.isBackpackOpen()) {
+      if (tryHandleBackpackClick(x, y, data, view)) {
+          return; 
+      }
 		}
 
-		handleMapClick(x, y, data, view);
+		if (!data.isFighting()) {
+      handleMapClick(x, y, data, view);
+		}
+	}
+	
+	private static void handleCombatClick(int x, int y, GameData data, GameView view) {
+		var combat = data.getCurrentCombat();
+
+		//Bouton fin de tour
+		if (view.getCombatView().isEndTurnClicked(x, y)) {
+			combat.endHeroTurn();
+			checkGameOver(data);
+			return;
+		}
+
+		//Utilisation d'item
+		handleCombatItemUsage(x, y, data, view, combat);
+	}
+	
+	private static void handleCombatItemUsage(int x, int y, GameData data, GameView view, Combat combat) {
+		if (!view.isBackpackOpen()) return;
+		
+		var gridPos = view.getBackpackView().getGridPosition(x, y);
+		if (gridPos == null) return;
+
+		Item item = data.getHero().getBackpack().getItemAt(gridPos.y(), gridPos.x());
+		if (item != null) {
+			combat.useItem(item);
+			
+			if (combat.isOver()) {
+				System.out.println("Combat terminé !");
+				data.endCombat();
+			}
+		}
+	}
+	
+	private static void checkGameOver(GameData data) {
+		if (data.getHero().isDead()) {
+			System.out.println("GAME OVER - Vous êtes mort.");
+			System.exit(0);
+		}
 	}
 	
 	//Renvoie true si on a cliqué sur le sac
 	private static boolean tryHandleBackpackClick(int x, int y, GameData data, GameView view) {
 		var backpackView = view.getBackpackView();
-		int[] gridPos = backpackView.getGridPosition(x, y);
+		Point gridPos = backpackView.getGridPosition(x, y);
 
 		if (gridPos != null) {
-			Item item = data.getHero().getBackpack().getItemAt(gridPos[0], gridPos[1]);
+			Item item = data.getHero().getBackpack().getItemAt(gridPos.y(), gridPos.x());
 			if (item != null) {
 				prepareDrag(item, data.getHero().getBackpack());
 				return true;
@@ -122,15 +159,10 @@ public class GameController {
 	}
 	
 	private static void handleMapClick(int x, int y, GameData data, GameView view) {
-		int[] mapPos = view.getFloorView().getGridPosition(x, y);
+		Point target = view.getFloorView().getGridPosition(x, y);
 
-		if (mapPos != null) {
-			int targetX = mapPos[0];
-			int targetY = mapPos[1];
-			
-			data.moveHeroTo(targetX, targetY);
-			
-			System.out.println("Déplacement vers : " + targetX + ", " + targetY);
+		if (target != null) {
+			data.moveHeroTo(target);
 		}
 	}
 
@@ -147,19 +179,18 @@ public class GameController {
 
 	//Deposer l'item choisi
 	private static void handlePointerUp(int x, int y, GameData data, GameView view) {
-		if (draggedItem == null)
-			return;
+		if (draggedItem == null) return;
 
 		var backpack = data.getHero().getBackpack();
-		int[] gridPos = view.getBackpackView().getGridPosition(x, y);
+		Point gridPos = view.getBackpackView().getGridPosition(x, y);
 
-		boolean success = (gridPos != null) && backpack.placeItem(draggedItem, gridPos[0], gridPos[1]);
+		boolean success = (gridPos != null) && backpack.placeItem(draggedItem, gridPos.y(), gridPos.x());
 
 		if (!success) {
 			System.out.println("NOPE!!");// Pour le debug, à retirer apres!!!!!
 			backpack.placeItem(originalItem, originalRow, originalCol);
 		} else {
-			System.out.println("Placé en " + gridPos[0] + "," + gridPos[1]);// Pour le debug, à retirer apres!!!!!
+			System.out.println("Placé en " + gridPos);// Pour le debug, à retirer apres!!!!!
 		}
 		draggedItem = null;
 		originalItem = null;

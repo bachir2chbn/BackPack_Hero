@@ -1,10 +1,11 @@
 package model.items;
 
-public interface Item {
+public sealed interface Item permits Armor, Gold, Magic, MeleeWeapon, RangeWeapon, Shield {
 
 	Item setShape(boolean[][] rotated);
 
 	long id();
+	
 
 	Rarity rarity();
 
@@ -31,5 +32,6 @@ public interface Item {
 
 		return setShape(rotated);
 	}
+
 
 }

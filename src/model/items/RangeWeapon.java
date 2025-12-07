@@ -33,4 +33,5 @@ public record RangeWeapon(long id, WeaponName name, int damage, Rarity rarity, b
 	public Item setShape(boolean[][] rotated) {
 		return new RangeWeapon(id, name, damage, rarity, rotated, cost, stats);
 	}
+
 }

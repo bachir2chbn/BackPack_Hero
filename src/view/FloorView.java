@@ -6,12 +6,13 @@ import java.awt.geom.Rectangle2D;
 import java.util.Objects;
 
 import model.dungeon.Floor;
+import model.dungeon.Point;
 import model.dungeon.Room;
 import model.dungeon.RoomType;
 
 public record FloorView(int xOrigin, int yOrigin, int roomSize) {
 
-	public void draw(Graphics2D graphics, Floor floor, int heroX, int heroY) {
+	public void draw(Graphics2D graphics, Floor floor, Point heroPos) {
 		for (int x = 0; x < floor.getWidth(); x++) {
 			for (int y = 0; y < floor.getHeight(); y++) {
 				drawRoom(graphics, floor, x, y);
@@ -19,7 +20,7 @@ public record FloorView(int xOrigin, int yOrigin, int roomSize) {
 		}
 		
 		//Dessiner le héros par dessus
-		drawHeroMarker(graphics, heroX, heroY);
+		drawHeroMarker(graphics, heroPos.x(), heroPos.y());
 	}
 	
 	private void drawHeroMarker(Graphics2D graphics, int x, int y) {
@@ -69,7 +70,7 @@ public record FloorView(int xOrigin, int yOrigin, int roomSize) {
 	}
 
 	//Convertit un pixel en coordonnées (x, y)
-	public int[] getGridPosition(int mouseX, int mouseY) {
+	public Point getGridPosition(int mouseX, int mouseY) {
 		int widthPx = 11 * roomSize; // 11 et 5 pour la taille, pour l'instant codé en dur
 		int heightPx = 5 * roomSize;
 
@@ -81,7 +82,7 @@ public record FloorView(int xOrigin, int yOrigin, int roomSize) {
 		int col = (mouseX - xOrigin) / roomSize;
 		int row = (mouseY - yOrigin) / roomSize;
 
-		return new int[] { col, row };
+		return new Point(col, row);
 	}
 
 }

@@ -4,19 +4,12 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.util.Objects;
 
 import model.dungeon.GameData;
 import model.hero.Hero;
 import model.items.Item;
 
-/**
- * Vue principale combinant FloorView, BackpackView et CombatView.
- * Fournit des méthodes utilitaires utilisées par le contrôleur.
- *
- * @author bachir2chbn
- * @author Mohammed442a
- * @version 1.0
- */
 public class GameView {
 
 	private final GameData data;
@@ -40,27 +33,22 @@ public class GameView {
 
 
 	public GameView(GameData data) {
+		Objects.requireNonNull(data);
 		this.data = data;
 		this.floorView = new FloorView(50, 50, 80);
 	}
-
-	/**
-	 * Positionne l'item actuellement déplacé pour l'affichage.
-	 *
-	 * @param item item à afficher (peut être null)
-	 * @param x position X d'affichage
-	 * @param y position Y d'affichage
-	 */
+	
 	public void setDraggedItem(Item item, float x, float y) {
+		//On ne met pas de requireNonNull car null indique qu'il n'y a pas d'item selectioné
     this.draggedItem = item;
     this.dragX = x;
     this.dragY = y;
 	}
 
 	public void draw(Graphics2D g, int width, int height) {
-    if (width != currentWidth || height != currentHeight) {
+		Objects.requireNonNull(g);
+    if (width != currentWidth || height != currentHeight)
         updateLayout(width, height);
-    }
 
     drawBackground(g);
     drawMap(g);
@@ -162,8 +150,6 @@ public class GameView {
 	    }
 	}
 	
-	
-	
 	private void drawBackpackButton(Graphics2D g) {
     g.setColor(showBackpack ? Color.GRAY : Color.ORANGE);
     g.fillRect(uiX, buttonY, buttonW, buttonH);
@@ -176,14 +162,7 @@ public class GameView {
     String text = showBackpack ? "FERMER" : "INVENTAIRE";
     g.drawString(text, uiX + 25, buttonY + 30);
 	}
-
-	/**
-	 * Indique si le bouton de toggle du sac a été cliqué.
-	 *
-	 * @param mouseX coordonnée X souris
-	 * @param mouseY coordonnée Y souris
-	 * @return true si toggle cliqué
-	 */
+	
 	public boolean isBackpackToggleButtonClicked(int x, int y) {
     return x >= uiX && x <= uiX + buttonW && y >= buttonY && y <= buttonY + buttonH;
 	}
@@ -191,12 +170,7 @@ public class GameView {
 	public void toggleBackpack() {
     this.showBackpack = !this.showBackpack;
 	}
-
-	/**
-	 * Indique si le sac est ouvert.
-	 *
-	 * @return true si ouvert
-	 */
+	
 	public boolean isBackpackOpen() {
     return showBackpack;
 	}
@@ -212,5 +186,4 @@ public class GameView {
 	public CombatView getCombatView() {
 		return combatView;
 	}
-
 }

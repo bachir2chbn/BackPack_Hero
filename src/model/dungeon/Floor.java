@@ -1,5 +1,12 @@
 package model.dungeon;
 
+/**
+ * Représente un étage du donjon : grille de Room avec dimensions fixes.
+ *
+ * @author bachir2chbn
+ * @author Mohammed442a
+ * @version 1.0
+ */
 public class Floor {
 	private static final int HEIGHT = 5;
 	private static final int WIDTH = 11;

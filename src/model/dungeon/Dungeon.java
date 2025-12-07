@@ -5,6 +5,14 @@ import java.util.List;
 
 import model.event.SmallRatWolf;
 
+/**
+ * Représente le donjon et la collection d'étages (Floor).
+ * Gère l'initialisation des étages et la navigation entre eux.
+ *
+ * @author bachir2chbn
+ * @author Mohammed442a
+ * @version 1.0
+ */
 public class Dungeon {
 	private final List<Floor> floors;
 	private int currentFloorIndex = 0;
